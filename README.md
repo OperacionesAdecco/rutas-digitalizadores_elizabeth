@@ -1,1 +1,0 @@
-# rutas-digitalizadores-semanales
