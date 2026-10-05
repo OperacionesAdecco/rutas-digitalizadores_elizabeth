@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_779c18570ac06bde3fecbb1c3b1e3f36 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+            <style>
+            .leaflet-control-attribution {
+                display: block !important;
+            }
+            </style>
+            
+    
+    <script>
+    (function() {
+        var userMarker = null;
+        var userCircle = null;
+        var firstCenter = true;
+
+        function addOrUpdateUserLocation(lat, lng, accuracy) {
+            var latlng = [lat, lng];
+
+            if (!userMarker) {
+                userMarker = L.marker(latlng, {
+                    title: "Ubicación actual del digitalizador"
+                }).addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+
+                userMarker.bindPopup("📍 Ubicación actual del digitalizador");
+            } else {
+                userMarker.setLatLng(latlng);
+            }
+
+            if (!userCircle) {
+                userCircle = L.circle(latlng, {
+                    radius: accuracy || 30,
+                    color: "#ee1c25",
+                    fillColor: "#ee1c25",
+                    fillOpacity: 0.18,
+                    weight: 2
+                }).addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+            } else {
+                userCircle.setLatLng(latlng);
+                userCircle.setRadius(accuracy || 30);
+            }
+
+            if (firstCenter) {
+                map_779c18570ac06bde3fecbb1c3b1e3f36.setView(latlng, 15);
+                firstCenter = false;
+            }
+        }
+
+        window.addEventListener("message", function(event) {
+            if (!event.data || event.data.tipo !== "actualizar-ubicacion") return;
+
+            addOrUpdateUserLocation(
+                event.data.lat,
+                event.data.lon,
+                event.data.accuracy
+            );
+        });
+    })();
+    </script>
+    
+    
+            <div style="
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 9999;
+                background: white;
+                padding: 10px 14px;
+                border-radius: 12px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+                font-family: Arial, sans-serif;
+                font-size: 13px;
+                line-height: 1.45;
+            ">
+                <b>Ruta del día</b><br>
+                Fecha: 07/10/2026<br>
+                Clientes: 33<br>
+                <span style="
+                    display:inline-block;
+                    margin-top:4px;
+                    color:#2563eb;
+                    font-weight:700;
+                ">
+                    📍 Activar ubicación GPS
+                </span>
+            </div>
+            
+    
+            <div class="folium-map" id="map_779c18570ac06bde3fecbb1c3b1e3f36" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_779c18570ac06bde3fecbb1c3b1e3f36 = L.map(
+                "map_779c18570ac06bde3fecbb1c3b1e3f36",
+                {
+                    center: [-11.8923291, -77.0375637],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 13,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+
+            
+
+        
+    
+            var tile_layer_3e10722ebc0853e4494e0b46f3568f1b = L.tileLayer(
+                "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "Tiles \u0026copy; Esri \u0026mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_3e10722ebc0853e4494e0b46f3568f1b.addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+        
+    
+            var marker_75e6629a505ef4671787e130a1ffb749 = L.marker(
+                [-11.8923291, -77.0375637],
+                {
+}
+            ).addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+        
+    
+            var icon_b172e7d07b178718cea1a78c1382e754 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_539a64674b7770575a0ad78dedf7b288 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_f3e8fb877fef63fc65152bed0aa39591 = $(`<div id="html_f3e8fb877fef63fc65152bed0aa39591" style="width: 100.0%; height: 100.0%;">                     <div style="font-family:Arial,sans-serif; font-size:13px; line-height:1.45; min-width:240px;">                         <div style="font-weight:bold; font-size:15px; margin-bottom:6px;">                             ANGELES MASLUCAN NORMA TRINIDAD                         </div>                          <div><b>Código:</b> C000659155</div>                         <div><b>Dirección:</b> AV. OTR URB ENACE MZ-C LT- NRO. 3 URB. URB ENACE Lima-Lima-Carabayllo</div>                         <div><b>Tipo documento:</b> DNI</div>                         <div><b>Documento:</b> 6000832</div>                          <div style="display:flex; gap:8px; margin-top:10px;">                             <a href="https://www.google.com/maps/search/?api=1&query=-11.8923291,-77.0375637"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#eef4ff;                                     color:#1d4ed8;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Maps                             </a>                              <a href="https://waze.com/ul?ll=-11.8923291,-77.0375637&navigate=yes"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#ecfeff;                                     color:#0891b2;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Waze                             </a>                             <button                                 onclick='window.parent.postMessage({"tipo":"abrir-detalle-cliente","codigo":"C000659155"}, "*")'                                 style="                                     background:#fff1f2;                                     color:#ee1c25;                                     padding:7px 10px;                                     border-radius:8px;                                     border:none;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                                     cursor:pointer;                                 ">                                 Info                             </button>                         </div>                     </div>                     </div>`)[0];
+                popup_539a64674b7770575a0ad78dedf7b288.setContent(html_f3e8fb877fef63fc65152bed0aa39591);
+            
+        
+
+        marker_75e6629a505ef4671787e130a1ffb749.bindPopup(popup_539a64674b7770575a0ad78dedf7b288)
+        ;
+
+        
+    
+    
+                marker_75e6629a505ef4671787e130a1ffb749.setIcon(icon_b172e7d07b178718cea1a78c1382e754);
+            
+    
+            var marker_2d57a0f1af0d72526f16f5dfc842f9b1 = L.marker(
+                [-11.891587, -77.0391583],
+                {
+}
+            ).addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+        
+    
+            var icon_670fd40bffc779f14450f83c908b3390 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_61f412dab33336b467c5e460c11eb858 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_33da913120f40362f6685991b472b309 = $(`<div id="html_33da913120f40362f6685991b472b309" style="width: 100.0%; height: 100.0%;">                     <div style="font-family:Arial,sans-serif; font-size:13px; line-height:1.45; min-width:240px;">                         <div style="font-weight:bold; font-size:15px; margin-bottom:6px;">                             CASO PONCE NORMA AGRIPINA                         </div>                          <div><b>Código:</b> C001761173</div>                         <div><b>Dirección:</b> CL. CALLE A MZ S LT 17 URB. ASOC VILLA CORPAC Lima-Lima-Carabayllo</div>                         <div><b>Tipo documento:</b> DNI</div>                         <div><b>Documento:</b> 7516956</div>                          <div style="display:flex; gap:8px; margin-top:10px;">                             <a href="https://www.google.com/maps/search/?api=1&query=-11.891587,-77.0391583"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#eef4ff;                                     color:#1d4ed8;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Maps                             </a>                              <a href="https://waze.com/ul?ll=-11.891587,-77.0391583&navigate=yes"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#ecfeff;                                     color:#0891b2;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Waze                             </a>                             <button                                 onclick='window.parent.postMessage({"tipo":"abrir-detalle-cliente","codigo":"C001761173"}, "*")'                                 style="                                     background:#fff1f2;                                     color:#ee1c25;                                     padding:7px 10px;                                     border-radius:8px;                                     border:none;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                                     cursor:pointer;                                 ">                                 Info                             </button>                         </div>                     </div>                     </div>`)[0];
+                popup_61f412dab33336b467c5e460c11eb858.setContent(html_33da913120f40362f6685991b472b309);
+            
+        
+
+        marker_2d57a0f1af0d72526f16f5dfc842f9b1.bindPopup(popup_61f412dab33336b467c5e460c11eb858)
+        ;
+
+        
+    
+    
+                marker_2d57a0f1af0d72526f16f5dfc842f9b1.setIcon(icon_670fd40bffc779f14450f83c908b3390);
+            
+    
+            var marker_0ddd5fefd7cd2947964f8063a1ef80c0 = L.marker(
+                [-11.8956224, -77.0342274],
+                {
+}
+            ).addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+        
+    
+            var icon_61e516cc6a516b7498a459664652dacc = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_be7fcf57dd3d4cadf92d7d590221a698 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_c33359ee11eb086639d1043f89bdfb78 = $(`<div id="html_c33359ee11eb086639d1043f89bdfb78" style="width: 100.0%; height: 100.0%;">                     <div style="font-family:Arial,sans-serif; font-size:13px; line-height:1.45; min-width:240px;">                         <div style="font-weight:bold; font-size:15px; margin-bottom:6px;">                             CHAVARRIA VEGA TERESA MARGARITA                         </div>                          <div><b>Código:</b> C001710710</div>                         <div><b>Dirección:</b> CALLE JUAN GONZALO ROSEL MZ Q LT 2 URB LUCYANA</div>                         <div><b>Tipo documento:</b> DNI</div>                         <div><b>Documento:</b> 25763515</div>                          <div style="display:flex; gap:8px; margin-top:10px;">                             <a href="https://www.google.com/maps/search/?api=1&query=-11.8956224,-77.0342274"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#eef4ff;                                     color:#1d4ed8;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Maps                             </a>                              <a href="https://waze.com/ul?ll=-11.8956224,-77.0342274&navigate=yes"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#ecfeff;                                     color:#0891b2;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Waze                             </a>                             <button                                 onclick='window.parent.postMessage({"tipo":"abrir-detalle-cliente","codigo":"C001710710"}, "*")'                                 style="                                     background:#fff1f2;                                     color:#ee1c25;                                     padding:7px 10px;                                     border-radius:8px;                                     border:none;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                                     cursor:pointer;                                 ">                                 Info                             </button>                         </div>                     </div>                     </div>`)[0];
+                popup_be7fcf57dd3d4cadf92d7d590221a698.setContent(html_c33359ee11eb086639d1043f89bdfb78);
+            
+        
+
+        marker_0ddd5fefd7cd2947964f8063a1ef80c0.bindPopup(popup_be7fcf57dd3d4cadf92d7d590221a698)
+        ;
+
+        
+    
+    
+                marker_0ddd5fefd7cd2947964f8063a1ef80c0.setIcon(icon_61e516cc6a516b7498a459664652dacc);
+            
+    
+            var marker_a14823162b67541ace106985e1ea6b80 = L.marker(
+                [-11.8927661, -77.0385474],
+                {
+}
+            ).addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+        
+    
+            var icon_58f4a50e87becda102b1958ed9af41cb = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_99335f584519fb2507841c44537d597f = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_47e69b0b7889473a0aec5ff081e919a0 = $(`<div id="html_47e69b0b7889473a0aec5ff081e919a0" style="width: 100.0%; height: 100.0%;">                     <div style="font-family:Arial,sans-serif; font-size:13px; line-height:1.45; min-width:240px;">                         <div style="font-weight:bold; font-size:15px; margin-bottom:6px;">                             CONSORCIO DIMARA S.A.C.                         </div>                          <div><b>Código:</b> C001634704</div>                         <div><b>Dirección:</b> AV. CHIMPU OCLLO MZA. Q LOTE. 90 Lima-Lima-Carabayllo</div>                         <div><b>Tipo documento:</b> RUC</div>                         <div><b>Documento:</b> 20606652977</div>                          <div style="display:flex; gap:8px; margin-top:10px;">                             <a href="https://www.google.com/maps/search/?api=1&query=-11.8927661,-77.0385474"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#eef4ff;                                     color:#1d4ed8;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Maps                             </a>                              <a href="https://waze.com/ul?ll=-11.8927661,-77.0385474&navigate=yes"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#ecfeff;                                     color:#0891b2;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Waze                             </a>                             <button                                 onclick='window.parent.postMessage({"tipo":"abrir-detalle-cliente","codigo":"C001634704"}, "*")'                                 style="                                     background:#fff1f2;                                     color:#ee1c25;                                     padding:7px 10px;                                     border-radius:8px;                                     border:none;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                                     cursor:pointer;                                 ">                                 Info                             </button>                         </div>                     </div>                     </div>`)[0];
+                popup_99335f584519fb2507841c44537d597f.setContent(html_47e69b0b7889473a0aec5ff081e919a0);
+            
+        
+
+        marker_a14823162b67541ace106985e1ea6b80.bindPopup(popup_99335f584519fb2507841c44537d597f)
+        ;
+
+        
+    
+    
+                marker_a14823162b67541ace106985e1ea6b80.setIcon(icon_58f4a50e87becda102b1958ed9af41cb);
+            
+    
+            var marker_a1ec8364325a7388505ee5da5503e7c0 = L.marker(
+                [-11.8975061, -77.0341013],
+                {
+}
+            ).addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+        
+    
+            var icon_5821f245d7e07d316cb0b1d5355efae5 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_08639c43f08435ad22f4e3947fcbe0c0 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_c06f941002a1cfedfb1b5e35531846bb = $(`<div id="html_c06f941002a1cfedfb1b5e35531846bb" style="width: 100.0%; height: 100.0%;">                     <div style="font-family:Arial,sans-serif; font-size:13px; line-height:1.45; min-width:240px;">                         <div style="font-weight:bold; font-size:15px; margin-bottom:6px;">                             CRUZ QUISPE ANHYELA LIZETH                         </div>                          <div><b>Código:</b> C001363013</div>                         <div><b>Dirección:</b> CL. BEGONIAS NRO. 495 URB. SANTA ISABEL Lima-Lima-Carabayllo</div>                         <div><b>Tipo documento:</b> DNI</div>                         <div><b>Documento:</b> 43464243</div>                          <div style="display:flex; gap:8px; margin-top:10px;">                             <a href="https://www.google.com/maps/search/?api=1&query=-11.8975061,-77.0341013"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#eef4ff;                                     color:#1d4ed8;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Maps                             </a>                              <a href="https://waze.com/ul?ll=-11.8975061,-77.0341013&navigate=yes"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#ecfeff;                                     color:#0891b2;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Waze                             </a>                             <button                                 onclick='window.parent.postMessage({"tipo":"abrir-detalle-cliente","codigo":"C001363013"}, "*")'                                 style="                                     background:#fff1f2;                                     color:#ee1c25;                                     padding:7px 10px;                                     border-radius:8px;                                     border:none;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                                     cursor:pointer;                                 ">                                 Info                             </button>                         </div>                     </div>                     </div>`)[0];
+                popup_08639c43f08435ad22f4e3947fcbe0c0.setContent(html_c06f941002a1cfedfb1b5e35531846bb);
+            
+        
+
+        marker_a1ec8364325a7388505ee5da5503e7c0.bindPopup(popup_08639c43f08435ad22f4e3947fcbe0c0)
+        ;
+
+        
+    
+    
+                marker_a1ec8364325a7388505ee5da5503e7c0.setIcon(icon_5821f245d7e07d316cb0b1d5355efae5);
+            
+    
+            var marker_f9d699c371327fc9023bf32504497b74 = L.marker(
+                [-11.897676, -77.0342799],
+                {
+}
+            ).addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+        
+    
+            var icon_2ffb4c365d3a31710400da70ece9fe72 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_32a32a9ce6515f443cf11ec7dc7e0437 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_08c18a0d0074fe8a211bbfb1eb7a2bc4 = $(`<div id="html_08c18a0d0074fe8a211bbfb1eb7a2bc4" style="width: 100.0%; height: 100.0%;">                     <div style="font-family:Arial,sans-serif; font-size:13px; line-height:1.45; min-width:240px;">                         <div style="font-weight:bold; font-size:15px; margin-bottom:6px;">                             DAVILA MALIQUI CARLOS                         </div>                          <div><b>Código:</b> C004161264</div>                         <div><b>Dirección:</b> Calle jr Quiñones número 206 luciana</div>                         <div><b>Tipo documento:</b> DNI</div>                         <div><b>Documento:</b> 10299095</div>                          <div style="display:flex; gap:8px; margin-top:10px;">                             <a href="https://www.google.com/maps/search/?api=1&query=-11.897676,-77.0342799"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#eef4ff;                                     color:#1d4ed8;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Maps                             </a>                              <a href="https://waze.com/ul?ll=-11.897676,-77.0342799&navigate=yes"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#ecfeff;                                     color:#0891b2;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Waze                             </a>                             <button                                 onclick='window.parent.postMessage({"tipo":"abrir-detalle-cliente","codigo":"C004161264"}, "*")'                                 style="                                     background:#fff1f2;                                     color:#ee1c25;                                     padding:7px 10px;                                     border-radius:8px;                                     border:none;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                                     cursor:pointer;                                 ">                                 Info                             </button>                         </div>                     </div>                     </div>`)[0];
+                popup_32a32a9ce6515f443cf11ec7dc7e0437.setContent(html_08c18a0d0074fe8a211bbfb1eb7a2bc4);
+            
+        
+
+        marker_f9d699c371327fc9023bf32504497b74.bindPopup(popup_32a32a9ce6515f443cf11ec7dc7e0437)
+        ;
+
+        
+    
+    
+                marker_f9d699c371327fc9023bf32504497b74.setIcon(icon_2ffb4c365d3a31710400da70ece9fe72);
+            
+    
+            var marker_8e57967d36e7b8e48898f57bac701939 = L.marker(
+                [-11.8956815, -77.0370265],
+                {
+}
+            ).addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+        
+    
+            var icon_11572fe5df182898f0406fdd39572bdc = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_1145f44a18087ccf46f021b2bc48b5df = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_9bd4c458a67e0a538adefef1d5a7a315 = $(`<div id="html_9bd4c458a67e0a538adefef1d5a7a315" style="width: 100.0%; height: 100.0%;">                     <div style="font-family:Arial,sans-serif; font-size:13px; line-height:1.45; min-width:240px;">                         <div style="font-weight:bold; font-size:15px; margin-bottom:6px;">                             DELGADO HERMOZA JUSTINA                         </div>                          <div><b>Código:</b> C004100481</div>                         <div><b>Dirección:</b> MCDO LUCYANA PTO 95</div>                         <div><b>Tipo documento:</b> DNI</div>                         <div><b>Documento:</b> 6912575</div>                          <div style="display:flex; gap:8px; margin-top:10px;">                             <a href="https://www.google.com/maps/search/?api=1&query=-11.8956815,-77.0370265"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#eef4ff;                                     color:#1d4ed8;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Maps                             </a>                              <a href="https://waze.com/ul?ll=-11.8956815,-77.0370265&navigate=yes"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#ecfeff;                                     color:#0891b2;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Waze                             </a>                             <button                                 onclick='window.parent.postMessage({"tipo":"abrir-detalle-cliente","codigo":"C004100481"}, "*")'                                 style="                                     background:#fff1f2;                                     color:#ee1c25;                                     padding:7px 10px;                                     border-radius:8px;                                     border:none;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                                     cursor:pointer;                                 ">                                 Info                             </button>                         </div>                     </div>                     </div>`)[0];
+                popup_1145f44a18087ccf46f021b2bc48b5df.setContent(html_9bd4c458a67e0a538adefef1d5a7a315);
+            
+        
+
+        marker_8e57967d36e7b8e48898f57bac701939.bindPopup(popup_1145f44a18087ccf46f021b2bc48b5df)
+        ;
+
+        
+    
+    
+                marker_8e57967d36e7b8e48898f57bac701939.setIcon(icon_11572fe5df182898f0406fdd39572bdc);
+            
+    
+            var marker_e75546c528129e431051b7b734592dc0 = L.marker(
+                [-11.8928615, -77.0342474],
+                {
+}
+            ).addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+        
+    
+            var icon_51776d6ec0bb38ef3c0408400b31b7e7 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_214d398d17bd450fd230c24d053165cf = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_5e973ceaf3efda691a2d48210640fc4f = $(`<div id="html_5e973ceaf3efda691a2d48210640fc4f" style="width: 100.0%; height: 100.0%;">                     <div style="font-family:Arial,sans-serif; font-size:13px; line-height:1.45; min-width:240px;">                         <div style="font-weight:bold; font-size:15px; margin-bottom:6px;">                             ENCINAS AYALA CLEMENTE ELDEFONSO                         </div>                          <div><b>Código:</b> C004162271</div>                         <div><b>Dirección:</b> AV JOSE CARLOS MARIATEGUI N.-359</div>                         <div><b>Tipo documento:</b> DNI</div>                         <div><b>Documento:</b> 10400491</div>                          <div style="display:flex; gap:8px; margin-top:10px;">                             <a href="https://www.google.com/maps/search/?api=1&query=-11.8928615,-77.0342474"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#eef4ff;                                     color:#1d4ed8;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Maps                             </a>                              <a href="https://waze.com/ul?ll=-11.8928615,-77.0342474&navigate=yes"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#ecfeff;                                     color:#0891b2;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Waze                             </a>                             <button                                 onclick='window.parent.postMessage({"tipo":"abrir-detalle-cliente","codigo":"C004162271"}, "*")'                                 style="                                     background:#fff1f2;                                     color:#ee1c25;                                     padding:7px 10px;                                     border-radius:8px;                                     border:none;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                                     cursor:pointer;                                 ">                                 Info                             </button>                         </div>                     </div>                     </div>`)[0];
+                popup_214d398d17bd450fd230c24d053165cf.setContent(html_5e973ceaf3efda691a2d48210640fc4f);
+            
+        
+
+        marker_e75546c528129e431051b7b734592dc0.bindPopup(popup_214d398d17bd450fd230c24d053165cf)
+        ;
+
+        
+    
+    
+                marker_e75546c528129e431051b7b734592dc0.setIcon(icon_51776d6ec0bb38ef3c0408400b31b7e7);
+            
+    
+            var marker_607dbb4e6cc06f2c6eb61074d12da5ca = L.marker(
+                [-11.8916467, -77.0384466],
+                {
+}
+            ).addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+        
+    
+            var icon_93ffe8856dbf86ed2d032b6ac5e170a6 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_740b668718536ed3601ea167b3891368 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_7281bd700b8b8618848c302b3f724fba = $(`<div id="html_7281bd700b8b8618848c302b3f724fba" style="width: 100.0%; height: 100.0%;">                     <div style="font-family:Arial,sans-serif; font-size:13px; line-height:1.45; min-width:240px;">                         <div style="font-weight:bold; font-size:15px; margin-bottom:6px;">                             FLORES VILCARROMERO GRACIELA                         </div>                          <div><b>Código:</b> C001756081</div>                         <div><b>Dirección:</b> AV. MZ S LT 56B AV CONDORCANQUI NRO. 32 Lima-Lima-Carabayllo</div>                         <div><b>Tipo documento:</b> </div>                         <div><b>Documento:</b> </div>                          <div style="display:flex; gap:8px; margin-top:10px;">                             <a href="https://www.google.com/maps/search/?api=1&query=-11.8916467,-77.0384466"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#eef4ff;                                     color:#1d4ed8;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Maps                             </a>                              <a href="https://waze.com/ul?ll=-11.8916467,-77.0384466&navigate=yes"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#ecfeff;                                     color:#0891b2;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Waze                             </a>                             <button                                 onclick='window.parent.postMessage({"tipo":"abrir-detalle-cliente","codigo":"C001756081"}, "*")'                                 style="                                     background:#fff1f2;                                     color:#ee1c25;                                     padding:7px 10px;                                     border-radius:8px;                                     border:none;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                                     cursor:pointer;                                 ">                                 Info                             </button>                         </div>                     </div>                     </div>`)[0];
+                popup_740b668718536ed3601ea167b3891368.setContent(html_7281bd700b8b8618848c302b3f724fba);
+            
+        
+
+        marker_607dbb4e6cc06f2c6eb61074d12da5ca.bindPopup(popup_740b668718536ed3601ea167b3891368)
+        ;
+
+        
+    
+    
+                marker_607dbb4e6cc06f2c6eb61074d12da5ca.setIcon(icon_93ffe8856dbf86ed2d032b6ac5e170a6);
+            
+    
+            var marker_b3db8392565ceefe09ab53ce4fdb12c7 = L.marker(
+                [-11.8965957, -77.0378608],
+                {
+}
+            ).addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+        
+    
+            var icon_9aa784fb9f4759ac3ad4b8179477c2b7 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_50385bcf18c0f1c37e73a404a0b7248a = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_ffd7ab455ea4b81a7f25c9b3314a8c48 = $(`<div id="html_ffd7ab455ea4b81a7f25c9b3314a8c48" style="width: 100.0%; height: 100.0%;">                     <div style="font-family:Arial,sans-serif; font-size:13px; line-height:1.45; min-width:240px;">                         <div style="font-weight:bold; font-size:15px; margin-bottom:6px;">                             GRUPO VERASTEGUI SOCIEDAD ANONIMA CERRAD                         </div>                          <div><b>Código:</b> C001731155</div>                         <div><b>Dirección:</b> AV. UNIVERSITARIA NORTE NRO. 3391 Lima-Lima-Carabayllo</div>                         <div><b>Tipo documento:</b> RUC</div>                         <div><b>Documento:</b> 20603124520</div>                          <div style="display:flex; gap:8px; margin-top:10px;">                             <a href="https://www.google.com/maps/search/?api=1&query=-11.8965957,-77.0378608"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#eef4ff;                                     color:#1d4ed8;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Maps                             </a>                              <a href="https://waze.com/ul?ll=-11.8965957,-77.0378608&navigate=yes"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#ecfeff;                                     color:#0891b2;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Waze                             </a>                             <button                                 onclick='window.parent.postMessage({"tipo":"abrir-detalle-cliente","codigo":"C001731155"}, "*")'                                 style="                                     background:#fff1f2;                                     color:#ee1c25;                                     padding:7px 10px;                                     border-radius:8px;                                     border:none;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                                     cursor:pointer;                                 ">                                 Info                             </button>                         </div>                     </div>                     </div>`)[0];
+                popup_50385bcf18c0f1c37e73a404a0b7248a.setContent(html_ffd7ab455ea4b81a7f25c9b3314a8c48);
+            
+        
+
+        marker_b3db8392565ceefe09ab53ce4fdb12c7.bindPopup(popup_50385bcf18c0f1c37e73a404a0b7248a)
+        ;
+
+        
+    
+    
+                marker_b3db8392565ceefe09ab53ce4fdb12c7.setIcon(icon_9aa784fb9f4759ac3ad4b8179477c2b7);
+            
+    
+            var marker_910494d12465783f8ac82647af87bf3b = L.marker(
+                [-11.8974294, -77.0341604],
+                {
+}
+            ).addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+        
+    
+            var icon_2660531179675a8592afbc105bea4ab2 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_33865b5a21b7673ae3337500a2a67be3 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_9448352daa72cbbeb39c87acec0152b3 = $(`<div id="html_9448352daa72cbbeb39c87acec0152b3" style="width: 100.0%; height: 100.0%;">                     <div style="font-family:Arial,sans-serif; font-size:13px; line-height:1.45; min-width:240px;">                         <div style="font-weight:bold; font-size:15px; margin-bottom:6px;">                             LLANOS BUSTAMANTE NELIDA                         </div>                          <div><b>Código:</b> C004209246</div>                         <div><b>Dirección:</b> CL. SIEMPRE VIVA 491</div>                         <div><b>Tipo documento:</b> RUC</div>                         <div><b>Documento:</b> 10429257617</div>                          <div style="display:flex; gap:8px; margin-top:10px;">                             <a href="https://www.google.com/maps/search/?api=1&query=-11.8974294,-77.0341604"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#eef4ff;                                     color:#1d4ed8;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Maps                             </a>                              <a href="https://waze.com/ul?ll=-11.8974294,-77.0341604&navigate=yes"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#ecfeff;                                     color:#0891b2;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Waze                             </a>                             <button                                 onclick='window.parent.postMessage({"tipo":"abrir-detalle-cliente","codigo":"C004209246"}, "*")'                                 style="                                     background:#fff1f2;                                     color:#ee1c25;                                     padding:7px 10px;                                     border-radius:8px;                                     border:none;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                                     cursor:pointer;                                 ">                                 Info                             </button>                         </div>                     </div>                     </div>`)[0];
+                popup_33865b5a21b7673ae3337500a2a67be3.setContent(html_9448352daa72cbbeb39c87acec0152b3);
+            
+        
+
+        marker_910494d12465783f8ac82647af87bf3b.bindPopup(popup_33865b5a21b7673ae3337500a2a67be3)
+        ;
+
+        
+    
+    
+                marker_910494d12465783f8ac82647af87bf3b.setIcon(icon_2660531179675a8592afbc105bea4ab2);
+            
+    
+            var marker_dd05cf6fe7f15e86dd3ffe38db73ff5f = L.marker(
+                [-11.8968449, -77.0382395],
+                {
+}
+            ).addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+        
+    
+            var icon_0f4a39b7bb513e30863f200d7ab29802 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_1ad047f7d3695b6bb0fac7e111cbcb24 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_49c5e94516ff58a8b1f03fcdc9e5ec23 = $(`<div id="html_49c5e94516ff58a8b1f03fcdc9e5ec23" style="width: 100.0%; height: 100.0%;">                     <div style="font-family:Arial,sans-serif; font-size:13px; line-height:1.45; min-width:240px;">                         <div style="font-weight:bold; font-size:15px; margin-bottom:6px;">                             MELGAREJO MANDUJANO CRISTINA                         </div>                          <div><b>Código:</b> C004208505</div>                         <div><b>Dirección:</b> MCDO-NUEVA IMAGEN  PTO-15</div>                         <div><b>Tipo documento:</b> DNI</div>                         <div><b>Documento:</b> 41190715</div>                          <div style="display:flex; gap:8px; margin-top:10px;">                             <a href="https://www.google.com/maps/search/?api=1&query=-11.8968449,-77.0382395"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#eef4ff;                                     color:#1d4ed8;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Maps                             </a>                              <a href="https://waze.com/ul?ll=-11.8968449,-77.0382395&navigate=yes"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#ecfeff;                                     color:#0891b2;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Waze                             </a>                             <button                                 onclick='window.parent.postMessage({"tipo":"abrir-detalle-cliente","codigo":"C004208505"}, "*")'                                 style="                                     background:#fff1f2;                                     color:#ee1c25;                                     padding:7px 10px;                                     border-radius:8px;                                     border:none;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                                     cursor:pointer;                                 ">                                 Info                             </button>                         </div>                     </div>                     </div>`)[0];
+                popup_1ad047f7d3695b6bb0fac7e111cbcb24.setContent(html_49c5e94516ff58a8b1f03fcdc9e5ec23);
+            
+        
+
+        marker_dd05cf6fe7f15e86dd3ffe38db73ff5f.bindPopup(popup_1ad047f7d3695b6bb0fac7e111cbcb24)
+        ;
+
+        
+    
+    
+                marker_dd05cf6fe7f15e86dd3ffe38db73ff5f.setIcon(icon_0f4a39b7bb513e30863f200d7ab29802);
+            
+    
+            var marker_71d7281fe427bf3b69f5627d72a8a13f = L.marker(
+                [-11.8920331, -77.0357904],
+                {
+}
+            ).addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+        
+    
+            var icon_7ce5c5016004d614149f7019ffd089a7 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_a63757dbe9920e97ab86bc8800737814 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_106d034e09f98f3d072bf64ca167c385 = $(`<div id="html_106d034e09f98f3d072bf64ca167c385" style="width: 100.0%; height: 100.0%;">                     <div style="font-family:Arial,sans-serif; font-size:13px; line-height:1.45; min-width:240px;">                         <div style="font-weight:bold; font-size:15px; margin-bottom:6px;">                             MENOR SANCHEZ KAREN MISHEL                         </div>                          <div><b>Código:</b> C001390000</div>                         <div><b>Dirección:</b> CL. CALLE COLLASUYO MZ F LOTE N- NRO. 27 URB. ENACE Lima-Lima-Carabayllo</div>                         <div><b>Tipo documento:</b> DNI</div>                         <div><b>Documento:</b> 76567374</div>                          <div style="display:flex; gap:8px; margin-top:10px;">                             <a href="https://www.google.com/maps/search/?api=1&query=-11.8920331,-77.0357904"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#eef4ff;                                     color:#1d4ed8;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Maps                             </a>                              <a href="https://waze.com/ul?ll=-11.8920331,-77.0357904&navigate=yes"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#ecfeff;                                     color:#0891b2;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Waze                             </a>                             <button                                 onclick='window.parent.postMessage({"tipo":"abrir-detalle-cliente","codigo":"C001390000"}, "*")'                                 style="                                     background:#fff1f2;                                     color:#ee1c25;                                     padding:7px 10px;                                     border-radius:8px;                                     border:none;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                                     cursor:pointer;                                 ">                                 Info                             </button>                         </div>                     </div>                     </div>`)[0];
+                popup_a63757dbe9920e97ab86bc8800737814.setContent(html_106d034e09f98f3d072bf64ca167c385);
+            
+        
+
+        marker_71d7281fe427bf3b69f5627d72a8a13f.bindPopup(popup_a63757dbe9920e97ab86bc8800737814)
+        ;
+
+        
+    
+    
+                marker_71d7281fe427bf3b69f5627d72a8a13f.setIcon(icon_7ce5c5016004d614149f7019ffd089a7);
+            
+    
+            var marker_b1841b19407686c76b8a044b1e9bc138 = L.marker(
+                [-11.8896382, -77.0362927],
+                {
+}
+            ).addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+        
+    
+            var icon_fdb052e7596d7b069ea56362e14ca802 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_4cf3c4e793dab6053438fb0151d47d22 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_3d3c210beffb0ee6193cf099fa1089de = $(`<div id="html_3d3c210beffb0ee6193cf099fa1089de" style="width: 100.0%; height: 100.0%;">                     <div style="font-family:Arial,sans-serif; font-size:13px; line-height:1.45; min-width:240px;">                         <div style="font-weight:bold; font-size:15px; margin-bottom:6px;">                             MOLLEHUANCA SUPA ROSA                         </div>                          <div><b>Código:</b> C001727313</div>                         <div><b>Dirección:</b> AV. CALLE CHICHAYSUYO MZ O LT NRO. 75 URB. URBANIZACIÓN ENACE Lima-Lima-Carabayllo</div>                         <div><b>Tipo documento:</b> DNI</div>                         <div><b>Documento:</b> 25608821</div>                          <div style="display:flex; gap:8px; margin-top:10px;">                             <a href="https://www.google.com/maps/search/?api=1&query=-11.8896382,-77.0362927"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#eef4ff;                                     color:#1d4ed8;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Maps                             </a>                              <a href="https://waze.com/ul?ll=-11.8896382,-77.0362927&navigate=yes"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#ecfeff;                                     color:#0891b2;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Waze                             </a>                             <button                                 onclick='window.parent.postMessage({"tipo":"abrir-detalle-cliente","codigo":"C001727313"}, "*")'                                 style="                                     background:#fff1f2;                                     color:#ee1c25;                                     padding:7px 10px;                                     border-radius:8px;                                     border:none;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                                     cursor:pointer;                                 ">                                 Info                             </button>                         </div>                     </div>                     </div>`)[0];
+                popup_4cf3c4e793dab6053438fb0151d47d22.setContent(html_3d3c210beffb0ee6193cf099fa1089de);
+            
+        
+
+        marker_b1841b19407686c76b8a044b1e9bc138.bindPopup(popup_4cf3c4e793dab6053438fb0151d47d22)
+        ;
+
+        
+    
+    
+                marker_b1841b19407686c76b8a044b1e9bc138.setIcon(icon_fdb052e7596d7b069ea56362e14ca802);
+            
+    
+            var marker_3ef6b995b9372b7e2c53a40076a72667 = L.marker(
+                [-11.8962762, -77.0339639],
+                {
+}
+            ).addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+        
+    
+            var icon_7cf14aadb4223e475f0848ccc6b47211 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_4c3aa2af172f41407075183b122959d8 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_e7d2bddbe2f5ef4c3520230bf089f8a4 = $(`<div id="html_e7d2bddbe2f5ef4c3520230bf089f8a4" style="width: 100.0%; height: 100.0%;">                     <div style="font-family:Arial,sans-serif; font-size:13px; line-height:1.45; min-width:240px;">                         <div style="font-weight:bold; font-size:15px; margin-bottom:6px;">                             MUÑOZ MODESTO SARITA                         </div>                          <div><b>Código:</b> C001435524</div>                         <div><b>Dirección:</b> MCDO. MCDOLUCYANA PTO NRO. 43 URB. LUCYANA Lima-Lima-Carabayllo</div>                         <div><b>Tipo documento:</b> RUC</div>                         <div><b>Documento:</b> 10092277254</div>                          <div style="display:flex; gap:8px; margin-top:10px;">                             <a href="https://www.google.com/maps/search/?api=1&query=-11.8962762,-77.0339639"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#eef4ff;                                     color:#1d4ed8;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Maps                             </a>                              <a href="https://waze.com/ul?ll=-11.8962762,-77.0339639&navigate=yes"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#ecfeff;                                     color:#0891b2;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Waze                             </a>                             <button                                 onclick='window.parent.postMessage({"tipo":"abrir-detalle-cliente","codigo":"C001435524"}, "*")'                                 style="                                     background:#fff1f2;                                     color:#ee1c25;                                     padding:7px 10px;                                     border-radius:8px;                                     border:none;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                                     cursor:pointer;                                 ">                                 Info                             </button>                         </div>                     </div>                     </div>`)[0];
+                popup_4c3aa2af172f41407075183b122959d8.setContent(html_e7d2bddbe2f5ef4c3520230bf089f8a4);
+            
+        
+
+        marker_3ef6b995b9372b7e2c53a40076a72667.bindPopup(popup_4c3aa2af172f41407075183b122959d8)
+        ;
+
+        
+    
+    
+                marker_3ef6b995b9372b7e2c53a40076a72667.setIcon(icon_7cf14aadb4223e475f0848ccc6b47211);
+            
+    
+            var marker_09e8f847cb6852aac55dd1df5f87dd45 = L.marker(
+                [-11.8961762, -77.0339364],
+                {
+}
+            ).addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+        
+    
+            var icon_15e52f8d8d10becad2f6c3d77e03d005 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_36322e4d951826272a7f4627f02ffa10 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_b38f5dde68a64653dc31c8946c1e1a22 = $(`<div id="html_b38f5dde68a64653dc31c8946c1e1a22" style="width: 100.0%; height: 100.0%;">                     <div style="font-family:Arial,sans-serif; font-size:13px; line-height:1.45; min-width:240px;">                         <div style="font-weight:bold; font-size:15px; margin-bottom:6px;">                             MUÑOZ RIVAS ELIZABETH FRINNE                         </div>                          <div><b>Código:</b> C001171449</div>                         <div><b>Dirección:</b> MCDO. MCDO LUCYANA PTO NRO. 67 URB. LUCYANA Lima-Lima-Carabayllo</div>                         <div><b>Tipo documento:</b> DNI</div>                         <div><b>Documento:</b> 47433806</div>                          <div style="display:flex; gap:8px; margin-top:10px;">                             <a href="https://www.google.com/maps/search/?api=1&query=-11.8961762,-77.0339364"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#eef4ff;                                     color:#1d4ed8;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Maps                             </a>                              <a href="https://waze.com/ul?ll=-11.8961762,-77.0339364&navigate=yes"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#ecfeff;                                     color:#0891b2;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Waze                             </a>                             <button                                 onclick='window.parent.postMessage({"tipo":"abrir-detalle-cliente","codigo":"C001171449"}, "*")'                                 style="                                     background:#fff1f2;                                     color:#ee1c25;                                     padding:7px 10px;                                     border-radius:8px;                                     border:none;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                                     cursor:pointer;                                 ">                                 Info                             </button>                         </div>                     </div>                     </div>`)[0];
+                popup_36322e4d951826272a7f4627f02ffa10.setContent(html_b38f5dde68a64653dc31c8946c1e1a22);
+            
+        
+
+        marker_09e8f847cb6852aac55dd1df5f87dd45.bindPopup(popup_36322e4d951826272a7f4627f02ffa10)
+        ;
+
+        
+    
+    
+                marker_09e8f847cb6852aac55dd1df5f87dd45.setIcon(icon_15e52f8d8d10becad2f6c3d77e03d005);
+            
+    
+            var marker_617be21795efe96f4534cbba5ce01bb5 = L.marker(
+                [-11.8975481, -77.0340691],
+                {
+}
+            ).addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+        
+    
+            var icon_f4d7241c41f1e0b346123e23db2e94d0 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_2950655e5d954c57e2730cff8a36715b = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_f7a0131f4c532547530928d1028a6aa9 = $(`<div id="html_f7a0131f4c532547530928d1028a6aa9" style="width: 100.0%; height: 100.0%;">                     <div style="font-family:Arial,sans-serif; font-size:13px; line-height:1.45; min-width:240px;">                         <div style="font-weight:bold; font-size:15px; margin-bottom:6px;">                             NICHO AREVALO CLORINDA LUCIA                         </div>                          <div><b>Código:</b> C001662173</div>                         <div><b>Dirección:</b> JR. JR LAS BEGONIAS 496 Lima-Lima-Carabayllo</div>                         <div><b>Tipo documento:</b> DNI</div>                         <div><b>Documento:</b> 47081101</div>                          <div style="display:flex; gap:8px; margin-top:10px;">                             <a href="https://www.google.com/maps/search/?api=1&query=-11.8975481,-77.0340691"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#eef4ff;                                     color:#1d4ed8;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Maps                             </a>                              <a href="https://waze.com/ul?ll=-11.8975481,-77.0340691&navigate=yes"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#ecfeff;                                     color:#0891b2;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Waze                             </a>                             <button                                 onclick='window.parent.postMessage({"tipo":"abrir-detalle-cliente","codigo":"C001662173"}, "*")'                                 style="                                     background:#fff1f2;                                     color:#ee1c25;                                     padding:7px 10px;                                     border-radius:8px;                                     border:none;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                                     cursor:pointer;                                 ">                                 Info                             </button>                         </div>                     </div>                     </div>`)[0];
+                popup_2950655e5d954c57e2730cff8a36715b.setContent(html_f7a0131f4c532547530928d1028a6aa9);
+            
+        
+
+        marker_617be21795efe96f4534cbba5ce01bb5.bindPopup(popup_2950655e5d954c57e2730cff8a36715b)
+        ;
+
+        
+    
+    
+                marker_617be21795efe96f4534cbba5ce01bb5.setIcon(icon_f4d7241c41f1e0b346123e23db2e94d0);
+            
+    
+            var marker_5610db2f597a65710dd049c1701774c2 = L.marker(
+                [-11.8908193, -77.0393746],
+                {
+}
+            ).addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+        
+    
+            var icon_4db4122c056561585d9a7ccb0a2f2bf0 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_a2fe661704a27bf6c9121b50f50c58a9 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_365b1035f666245812a6efc9d2cc0bbf = $(`<div id="html_365b1035f666245812a6efc9d2cc0bbf" style="width: 100.0%; height: 100.0%;">                     <div style="font-family:Arial,sans-serif; font-size:13px; line-height:1.45; min-width:240px;">                         <div style="font-weight:bold; font-size:15px; margin-bottom:6px;">                             OLAYA SANCHEZ EDGAR JAVIER                         </div>                          <div><b>Código:</b> C001756095</div>                         <div><b>Dirección:</b> JR. JR SANTIAGO DE CARDENAS LOTE. 38 URB. URB VILLA CORPAC Lima-Lima-Carabayllo</div>                         <div><b>Tipo documento:</b> DNI</div>                         <div><b>Documento:</b> 80654071</div>                          <div style="display:flex; gap:8px; margin-top:10px;">                             <a href="https://www.google.com/maps/search/?api=1&query=-11.8908193,-77.0393746"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#eef4ff;                                     color:#1d4ed8;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Maps                             </a>                              <a href="https://waze.com/ul?ll=-11.8908193,-77.0393746&navigate=yes"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#ecfeff;                                     color:#0891b2;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Waze                             </a>                             <button                                 onclick='window.parent.postMessage({"tipo":"abrir-detalle-cliente","codigo":"C001756095"}, "*")'                                 style="                                     background:#fff1f2;                                     color:#ee1c25;                                     padding:7px 10px;                                     border-radius:8px;                                     border:none;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                                     cursor:pointer;                                 ">                                 Info                             </button>                         </div>                     </div>                     </div>`)[0];
+                popup_a2fe661704a27bf6c9121b50f50c58a9.setContent(html_365b1035f666245812a6efc9d2cc0bbf);
+            
+        
+
+        marker_5610db2f597a65710dd049c1701774c2.bindPopup(popup_a2fe661704a27bf6c9121b50f50c58a9)
+        ;
+
+        
+    
+    
+                marker_5610db2f597a65710dd049c1701774c2.setIcon(icon_4db4122c056561585d9a7ccb0a2f2bf0);
+            
+    
+            var marker_8797be96588bd5681468140d3c77ad05 = L.marker(
+                [-11.89152, -77.0355216],
+                {
+}
+            ).addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+        
+    
+            var icon_d77705d2806d7fa1a2b99e3293e0569d = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_40864c51e53b1ad473f79b43a60dcceb = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_f9b436b5b4b4b12da0f6c1f8e87021d1 = $(`<div id="html_f9b436b5b4b4b12da0f6c1f8e87021d1" style="width: 100.0%; height: 100.0%;">                     <div style="font-family:Arial,sans-serif; font-size:13px; line-height:1.45; min-width:240px;">                         <div style="font-weight:bold; font-size:15px; margin-bottom:6px;">                             PACCHO RIVERA SUSANA                         </div>                          <div><b>Código:</b> C000659154</div>                         <div><b>Dirección:</b> AV. OTR M-H L-17 MZA. MAZAA400 LOTE. 17 URB. ASO APAVIC Lima-Lima-Carabayllo</div>                         <div><b>Tipo documento:</b> RUC</div>                         <div><b>Documento:</b> 10104013339</div>                          <div style="display:flex; gap:8px; margin-top:10px;">                             <a href="https://www.google.com/maps/search/?api=1&query=-11.89152,-77.0355216"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#eef4ff;                                     color:#1d4ed8;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Maps                             </a>                              <a href="https://waze.com/ul?ll=-11.89152,-77.0355216&navigate=yes"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#ecfeff;                                     color:#0891b2;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Waze                             </a>                             <button                                 onclick='window.parent.postMessage({"tipo":"abrir-detalle-cliente","codigo":"C000659154"}, "*")'                                 style="                                     background:#fff1f2;                                     color:#ee1c25;                                     padding:7px 10px;                                     border-radius:8px;                                     border:none;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                                     cursor:pointer;                                 ">                                 Info                             </button>                         </div>                     </div>                     </div>`)[0];
+                popup_40864c51e53b1ad473f79b43a60dcceb.setContent(html_f9b436b5b4b4b12da0f6c1f8e87021d1);
+            
+        
+
+        marker_8797be96588bd5681468140d3c77ad05.bindPopup(popup_40864c51e53b1ad473f79b43a60dcceb)
+        ;
+
+        
+    
+    
+                marker_8797be96588bd5681468140d3c77ad05.setIcon(icon_d77705d2806d7fa1a2b99e3293e0569d);
+            
+    
+            var marker_5f9ec41967ffb8988b29f18082f5efc4 = L.marker(
+                [-11.889908, -77.037282],
+                {
+}
+            ).addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+        
+    
+            var icon_6a9cc75f089af54b51c75d3164014b60 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_a13a7b5643ae604a22147f79a28f4159 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_16f3a620927147b62617419a21f2058e = $(`<div id="html_16f3a620927147b62617419a21f2058e" style="width: 100.0%; height: 100.0%;">                     <div style="font-family:Arial,sans-serif; font-size:13px; line-height:1.45; min-width:240px;">                         <div style="font-weight:bold; font-size:15px; margin-bottom:6px;">                             PACHAS GOMEZ LORENA MAGALI                         </div>                          <div><b>Código:</b> C001725799</div>                         <div><b>Dirección:</b> AV. ASOC VIV VILLA CORPAC MZB1 LT NRO. 33 URB. ASOC VIV VILLA CORPAC Lima-Lima-Carabayllo</div>                         <div><b>Tipo documento:</b> DNI</div>                         <div><b>Documento:</b> 9547550</div>                          <div style="display:flex; gap:8px; margin-top:10px;">                             <a href="https://www.google.com/maps/search/?api=1&query=-11.889908,-77.037282"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#eef4ff;                                     color:#1d4ed8;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Maps                             </a>                              <a href="https://waze.com/ul?ll=-11.889908,-77.037282&navigate=yes"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#ecfeff;                                     color:#0891b2;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Waze                             </a>                             <button                                 onclick='window.parent.postMessage({"tipo":"abrir-detalle-cliente","codigo":"C001725799"}, "*")'                                 style="                                     background:#fff1f2;                                     color:#ee1c25;                                     padding:7px 10px;                                     border-radius:8px;                                     border:none;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                                     cursor:pointer;                                 ">                                 Info                             </button>                         </div>                     </div>                     </div>`)[0];
+                popup_a13a7b5643ae604a22147f79a28f4159.setContent(html_16f3a620927147b62617419a21f2058e);
+            
+        
+
+        marker_5f9ec41967ffb8988b29f18082f5efc4.bindPopup(popup_a13a7b5643ae604a22147f79a28f4159)
+        ;
+
+        
+    
+    
+                marker_5f9ec41967ffb8988b29f18082f5efc4.setIcon(icon_6a9cc75f089af54b51c75d3164014b60);
+            
+    
+            var marker_dbd471310a71cbcd13ca223c32e1e318 = L.marker(
+                [-11.8960606, -77.034165],
+                {
+}
+            ).addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+        
+    
+            var icon_2fcc9e117a5c23b520b3eee51935afe4 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_c5b10eb7a27ab6db5eaadbc0305d2204 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_71ee8ea65c6b90d1138bbbff6683f295 = $(`<div id="html_71ee8ea65c6b90d1138bbbff6683f295" style="width: 100.0%; height: 100.0%;">                     <div style="font-family:Arial,sans-serif; font-size:13px; line-height:1.45; min-width:240px;">                         <div style="font-weight:bold; font-size:15px; margin-bottom:6px;">                             PALOMINO PALOMINO AURELIA                         </div>                          <div><b>Código:</b> C001435207</div>                         <div><b>Dirección:</b> MCDO. MCDOLUCYANA PTO NRO. 80 URB. LUCYANA Lima-Lima-Carabayllo</div>                         <div><b>Tipo documento:</b> RUC</div>                         <div><b>Documento:</b> 10071885904</div>                          <div style="display:flex; gap:8px; margin-top:10px;">                             <a href="https://www.google.com/maps/search/?api=1&query=-11.8960606,-77.034165"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#eef4ff;                                     color:#1d4ed8;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Maps                             </a>                              <a href="https://waze.com/ul?ll=-11.8960606,-77.034165&navigate=yes"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#ecfeff;                                     color:#0891b2;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Waze                             </a>                             <button                                 onclick='window.parent.postMessage({"tipo":"abrir-detalle-cliente","codigo":"C001435207"}, "*")'                                 style="                                     background:#fff1f2;                                     color:#ee1c25;                                     padding:7px 10px;                                     border-radius:8px;                                     border:none;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                                     cursor:pointer;                                 ">                                 Info                             </button>                         </div>                     </div>                     </div>`)[0];
+                popup_c5b10eb7a27ab6db5eaadbc0305d2204.setContent(html_71ee8ea65c6b90d1138bbbff6683f295);
+            
+        
+
+        marker_dbd471310a71cbcd13ca223c32e1e318.bindPopup(popup_c5b10eb7a27ab6db5eaadbc0305d2204)
+        ;
+
+        
+    
+    
+                marker_dbd471310a71cbcd13ca223c32e1e318.setIcon(icon_2fcc9e117a5c23b520b3eee51935afe4);
+            
+    
+            var marker_f138c55f8230d513c1b8dc8b622a0263 = L.marker(
+                [-11.8960764, -77.0341607],
+                {
+}
+            ).addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+        
+    
+            var icon_67d9461e36e97c7f06194c26d5987514 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_93fa6f625665af761079c8fb5afabf7b = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_6b5146ee5a182157bfad8fb78a9fa5ba = $(`<div id="html_6b5146ee5a182157bfad8fb78a9fa5ba" style="width: 100.0%; height: 100.0%;">                     <div style="font-family:Arial,sans-serif; font-size:13px; line-height:1.45; min-width:240px;">                         <div style="font-weight:bold; font-size:15px; margin-bottom:6px;">                             PALOMINO PALOMINO ZOSIMO                         </div>                          <div><b>Código:</b> C000663717</div>                         <div><b>Dirección:</b> MERCADO LUCYANA PTO 83</div>                         <div><b>Tipo documento:</b> DNI</div>                         <div><b>Documento:</b> 7258365</div>                          <div style="display:flex; gap:8px; margin-top:10px;">                             <a href="https://www.google.com/maps/search/?api=1&query=-11.8960764,-77.0341607"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#eef4ff;                                     color:#1d4ed8;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Maps                             </a>                              <a href="https://waze.com/ul?ll=-11.8960764,-77.0341607&navigate=yes"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#ecfeff;                                     color:#0891b2;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Waze                             </a>                             <button                                 onclick='window.parent.postMessage({"tipo":"abrir-detalle-cliente","codigo":"C000663717"}, "*")'                                 style="                                     background:#fff1f2;                                     color:#ee1c25;                                     padding:7px 10px;                                     border-radius:8px;                                     border:none;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                                     cursor:pointer;                                 ">                                 Info                             </button>                         </div>                     </div>                     </div>`)[0];
+                popup_93fa6f625665af761079c8fb5afabf7b.setContent(html_6b5146ee5a182157bfad8fb78a9fa5ba);
+            
+        
+
+        marker_f138c55f8230d513c1b8dc8b622a0263.bindPopup(popup_93fa6f625665af761079c8fb5afabf7b)
+        ;
+
+        
+    
+    
+                marker_f138c55f8230d513c1b8dc8b622a0263.setIcon(icon_67d9461e36e97c7f06194c26d5987514);
+            
+    
+            var marker_1b5cf5ae9d78d201a7040947f04b9072 = L.marker(
+                [-11.8945577, -77.0385481],
+                {
+}
+            ).addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+        
+    
+            var icon_c8e79845750c45f6d5295bc8aee3bb70 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_6560cbcdb6b2f34d11d09c999231211e = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_dc89917fb10fbb26aac2f124c9e765c6 = $(`<div id="html_dc89917fb10fbb26aac2f124c9e765c6" style="width: 100.0%; height: 100.0%;">                     <div style="font-family:Arial,sans-serif; font-size:13px; line-height:1.45; min-width:240px;">                         <div style="font-weight:bold; font-size:15px; margin-bottom:6px;">                             PANTA ACUÑA EMILIO TEOFILO                         </div>                          <div><b>Código:</b> C001760582</div>                         <div><b>Dirección:</b> CL. CALLE MARIANO MENDIGUREN N ,1 URB. URB TUNGASUCA Lima-Lima-Carabayllo</div>                         <div><b>Tipo documento:</b> DNI</div>                         <div><b>Documento:</b> 6176590</div>                          <div style="display:flex; gap:8px; margin-top:10px;">                             <a href="https://www.google.com/maps/search/?api=1&query=-11.8945577,-77.0385481"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#eef4ff;                                     color:#1d4ed8;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Maps                             </a>                              <a href="https://waze.com/ul?ll=-11.8945577,-77.0385481&navigate=yes"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#ecfeff;                                     color:#0891b2;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Waze                             </a>                             <button                                 onclick='window.parent.postMessage({"tipo":"abrir-detalle-cliente","codigo":"C001760582"}, "*")'                                 style="                                     background:#fff1f2;                                     color:#ee1c25;                                     padding:7px 10px;                                     border-radius:8px;                                     border:none;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                                     cursor:pointer;                                 ">                                 Info                             </button>                         </div>                     </div>                     </div>`)[0];
+                popup_6560cbcdb6b2f34d11d09c999231211e.setContent(html_dc89917fb10fbb26aac2f124c9e765c6);
+            
+        
+
+        marker_1b5cf5ae9d78d201a7040947f04b9072.bindPopup(popup_6560cbcdb6b2f34d11d09c999231211e)
+        ;
+
+        
+    
+    
+                marker_1b5cf5ae9d78d201a7040947f04b9072.setIcon(icon_c8e79845750c45f6d5295bc8aee3bb70);
+            
+    
+            var marker_7aa295e916debfd147263d7789f590bc = L.marker(
+                [-11.8982158, -77.0358244],
+                {
+}
+            ).addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+        
+    
+            var icon_547b377ad4211e9b96806ea6bbdd4e63 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_13cbde9fb43182ab5d36ad1a5cb716ab = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_98e1a7f29c27d1163f6f5e3eb317626f = $(`<div id="html_98e1a7f29c27d1163f6f5e3eb317626f" style="width: 100.0%; height: 100.0%;">                     <div style="font-family:Arial,sans-serif; font-size:13px; line-height:1.45; min-width:240px;">                         <div style="font-weight:bold; font-size:15px; margin-bottom:6px;">                             POMAYANQUE CHAVEZ CARMEN ROSA                         </div>                          <div><b>Código:</b> C004203904</div>                         <div><b>Dirección:</b> JR ALHELIES N.- 101 URB SANTA ISABEL</div>                         <div><b>Tipo documento:</b> DNI</div>                         <div><b>Documento:</b> 10817886</div>                          <div style="display:flex; gap:8px; margin-top:10px;">                             <a href="https://www.google.com/maps/search/?api=1&query=-11.8982158,-77.0358244"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#eef4ff;                                     color:#1d4ed8;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Maps                             </a>                              <a href="https://waze.com/ul?ll=-11.8982158,-77.0358244&navigate=yes"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#ecfeff;                                     color:#0891b2;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Waze                             </a>                             <button                                 onclick='window.parent.postMessage({"tipo":"abrir-detalle-cliente","codigo":"C004203904"}, "*")'                                 style="                                     background:#fff1f2;                                     color:#ee1c25;                                     padding:7px 10px;                                     border-radius:8px;                                     border:none;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                                     cursor:pointer;                                 ">                                 Info                             </button>                         </div>                     </div>                     </div>`)[0];
+                popup_13cbde9fb43182ab5d36ad1a5cb716ab.setContent(html_98e1a7f29c27d1163f6f5e3eb317626f);
+            
+        
+
+        marker_7aa295e916debfd147263d7789f590bc.bindPopup(popup_13cbde9fb43182ab5d36ad1a5cb716ab)
+        ;
+
+        
+    
+    
+                marker_7aa295e916debfd147263d7789f590bc.setIcon(icon_547b377ad4211e9b96806ea6bbdd4e63);
+            
+    
+            var marker_3aadf36dc9bdb6615120fb3ac7ef3835 = L.marker(
+                [-11.897911, -77.0361096],
+                {
+}
+            ).addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+        
+    
+            var icon_5d53e2e92b2c5ea41461c7ba3c79b898 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_3901ba3509e670eca2e4c024c0640ce3 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_bc0ce191c5c8488954a4adab4b3320b4 = $(`<div id="html_bc0ce191c5c8488954a4adab4b3320b4" style="width: 100.0%; height: 100.0%;">                     <div style="font-family:Arial,sans-serif; font-size:13px; line-height:1.45; min-width:240px;">                         <div style="font-weight:bold; font-size:15px; margin-bottom:6px;">                             RONDAN DE VILLANUEVA VALENTINA                         </div>                          <div><b>Código:</b> C000662843</div>                         <div><b>Dirección:</b> JR. CAL ALHELIES N301 NRO. 301 MZA. MAZAA250 URB. SANTA ISABEL Lima-Lima-Carabayllo</div>                         <div><b>Tipo documento:</b> RUC</div>                         <div><b>Documento:</b> 10153880781</div>                          <div style="display:flex; gap:8px; margin-top:10px;">                             <a href="https://www.google.com/maps/search/?api=1&query=-11.897911,-77.0361096"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#eef4ff;                                     color:#1d4ed8;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Maps                             </a>                              <a href="https://waze.com/ul?ll=-11.897911,-77.0361096&navigate=yes"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#ecfeff;                                     color:#0891b2;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Waze                             </a>                             <button                                 onclick='window.parent.postMessage({"tipo":"abrir-detalle-cliente","codigo":"C000662843"}, "*")'                                 style="                                     background:#fff1f2;                                     color:#ee1c25;                                     padding:7px 10px;                                     border-radius:8px;                                     border:none;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                                     cursor:pointer;                                 ">                                 Info                             </button>                         </div>                     </div>                     </div>`)[0];
+                popup_3901ba3509e670eca2e4c024c0640ce3.setContent(html_bc0ce191c5c8488954a4adab4b3320b4);
+            
+        
+
+        marker_3aadf36dc9bdb6615120fb3ac7ef3835.bindPopup(popup_3901ba3509e670eca2e4c024c0640ce3)
+        ;
+
+        
+    
+    
+                marker_3aadf36dc9bdb6615120fb3ac7ef3835.setIcon(icon_5d53e2e92b2c5ea41461c7ba3c79b898);
+            
+    
+            var marker_5ad55f3adc56dd68bb3be43ff1c6e700 = L.marker(
+                [-11.8958178, -77.036279],
+                {
+}
+            ).addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+        
+    
+            var icon_f5d6a76015c3bfaf1cdb660bfbc43a6b = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_68a13e86acc61c99a497272572b073a8 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_975568961bbd7b4c597cd8a064a86f35 = $(`<div id="html_975568961bbd7b4c597cd8a064a86f35" style="width: 100.0%; height: 100.0%;">                     <div style="font-family:Arial,sans-serif; font-size:13px; line-height:1.45; min-width:240px;">                         <div style="font-weight:bold; font-size:15px; margin-bottom:6px;">                             SAENZ CAPELLAN NANCY SOCORRO                         </div>                          <div><b>Código:</b> C004160597</div>                         <div><b>Dirección:</b> JR. JOSE MARIA EGUREN N.-113 URB LUCYANA</div>                         <div><b>Tipo documento:</b> DNI</div>                         <div><b>Documento:</b> 6926123</div>                          <div style="display:flex; gap:8px; margin-top:10px;">                             <a href="https://www.google.com/maps/search/?api=1&query=-11.8958178,-77.036279"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#eef4ff;                                     color:#1d4ed8;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Maps                             </a>                              <a href="https://waze.com/ul?ll=-11.8958178,-77.036279&navigate=yes"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#ecfeff;                                     color:#0891b2;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Waze                             </a>                             <button                                 onclick='window.parent.postMessage({"tipo":"abrir-detalle-cliente","codigo":"C004160597"}, "*")'                                 style="                                     background:#fff1f2;                                     color:#ee1c25;                                     padding:7px 10px;                                     border-radius:8px;                                     border:none;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                                     cursor:pointer;                                 ">                                 Info                             </button>                         </div>                     </div>                     </div>`)[0];
+                popup_68a13e86acc61c99a497272572b073a8.setContent(html_975568961bbd7b4c597cd8a064a86f35);
+            
+        
+
+        marker_5ad55f3adc56dd68bb3be43ff1c6e700.bindPopup(popup_68a13e86acc61c99a497272572b073a8)
+        ;
+
+        
+    
+    
+                marker_5ad55f3adc56dd68bb3be43ff1c6e700.setIcon(icon_f5d6a76015c3bfaf1cdb660bfbc43a6b);
+            
+    
+            var marker_6f864fe25282ff9b2ec9961a71ba3c55 = L.marker(
+                [-11.8952062, -77.035543],
+                {
+}
+            ).addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+        
+    
+            var icon_359be08afe19d86ed6bf1ce442e7870c = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_086d7e1dc7290223c4a454d5d3127220 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_27fc8cffd3acd3e838c2732a4cc41117 = $(`<div id="html_27fc8cffd3acd3e838c2732a4cc41117" style="width: 100.0%; height: 100.0%;">                     <div style="font-family:Arial,sans-serif; font-size:13px; line-height:1.45; min-width:240px;">                         <div style="font-weight:bold; font-size:15px; margin-bottom:6px;">                             SALINAS CRISPIN BETTY ROSI                         </div>                          <div><b>Código:</b> C004153650</div>                         <div><b>Dirección:</b> AV JOSE CARLOS MARIATEGUI N.-189 URB LUCYANA</div>                         <div><b>Tipo documento:</b> DNI</div>                         <div><b>Documento:</b> 7648277</div>                          <div style="display:flex; gap:8px; margin-top:10px;">                             <a href="https://www.google.com/maps/search/?api=1&query=-11.8952062,-77.035543"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#eef4ff;                                     color:#1d4ed8;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Maps                             </a>                              <a href="https://waze.com/ul?ll=-11.8952062,-77.035543&navigate=yes"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#ecfeff;                                     color:#0891b2;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Waze                             </a>                             <button                                 onclick='window.parent.postMessage({"tipo":"abrir-detalle-cliente","codigo":"C004153650"}, "*")'                                 style="                                     background:#fff1f2;                                     color:#ee1c25;                                     padding:7px 10px;                                     border-radius:8px;                                     border:none;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                                     cursor:pointer;                                 ">                                 Info                             </button>                         </div>                     </div>                     </div>`)[0];
+                popup_086d7e1dc7290223c4a454d5d3127220.setContent(html_27fc8cffd3acd3e838c2732a4cc41117);
+            
+        
+
+        marker_6f864fe25282ff9b2ec9961a71ba3c55.bindPopup(popup_086d7e1dc7290223c4a454d5d3127220)
+        ;
+
+        
+    
+    
+                marker_6f864fe25282ff9b2ec9961a71ba3c55.setIcon(icon_359be08afe19d86ed6bf1ce442e7870c);
+            
+    
+            var marker_e06c5dbc3729165b290406442de0662a = L.marker(
+                [-11.8972154, -77.0345043],
+                {
+}
+            ).addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+        
+    
+            var icon_d2a094f014e809bdbeacf0d238d830a1 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_37f9338c0336a319d34dd5162bcf0265 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_2c404fb7a422c503e582393dba7ca285 = $(`<div id="html_2c404fb7a422c503e582393dba7ca285" style="width: 100.0%; height: 100.0%;">                     <div style="font-family:Arial,sans-serif; font-size:13px; line-height:1.45; min-width:240px;">                         <div style="font-weight:bold; font-size:15px; margin-bottom:6px;">                             SALINAS RONDAN CLAVEL ELSA                         </div>                          <div><b>Código:</b> C000659289</div>                         <div><b>Dirección:</b> JR. CAL LAS CAMELIAS N199 NRO. 199 MZA. MAZAA370 URB. SANTA ISABEL Lima-Lima-Carabayllo</div>                         <div><b>Tipo documento:</b> DNI</div>                         <div><b>Documento:</b> 10404967</div>                          <div style="display:flex; gap:8px; margin-top:10px;">                             <a href="https://www.google.com/maps/search/?api=1&query=-11.8972154,-77.0345043"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#eef4ff;                                     color:#1d4ed8;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Maps                             </a>                              <a href="https://waze.com/ul?ll=-11.8972154,-77.0345043&navigate=yes"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#ecfeff;                                     color:#0891b2;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Waze                             </a>                             <button                                 onclick='window.parent.postMessage({"tipo":"abrir-detalle-cliente","codigo":"C000659289"}, "*")'                                 style="                                     background:#fff1f2;                                     color:#ee1c25;                                     padding:7px 10px;                                     border-radius:8px;                                     border:none;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                                     cursor:pointer;                                 ">                                 Info                             </button>                         </div>                     </div>                     </div>`)[0];
+                popup_37f9338c0336a319d34dd5162bcf0265.setContent(html_2c404fb7a422c503e582393dba7ca285);
+            
+        
+
+        marker_e06c5dbc3729165b290406442de0662a.bindPopup(popup_37f9338c0336a319d34dd5162bcf0265)
+        ;
+
+        
+    
+    
+                marker_e06c5dbc3729165b290406442de0662a.setIcon(icon_d2a094f014e809bdbeacf0d238d830a1);
+            
+    
+            var marker_8e27e65ff6aab66c42d32185575587ac = L.marker(
+                [-11.8958284, -77.0340585],
+                {
+}
+            ).addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+        
+    
+            var icon_bea1ee471e0699c989964d10899faf10 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_56a136976931f467f0d0adb8528f2fd4 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_12522c7b4f79a0fede2ce630811f8000 = $(`<div id="html_12522c7b4f79a0fede2ce630811f8000" style="width: 100.0%; height: 100.0%;">                     <div style="font-family:Arial,sans-serif; font-size:13px; line-height:1.45; min-width:240px;">                         <div style="font-weight:bold; font-size:15px; margin-bottom:6px;">                             SILVA SANDI ELIZABETH                         </div>                          <div><b>Código:</b> C001673004</div>                         <div><b>Dirección:</b> MERCADO LUCYNA PTO 11</div>                         <div><b>Tipo documento:</b> DNI</div>                         <div><b>Documento:</b> 40950579</div>                          <div style="display:flex; gap:8px; margin-top:10px;">                             <a href="https://www.google.com/maps/search/?api=1&query=-11.8958284,-77.0340585"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#eef4ff;                                     color:#1d4ed8;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Maps                             </a>                              <a href="https://waze.com/ul?ll=-11.8958284,-77.0340585&navigate=yes"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#ecfeff;                                     color:#0891b2;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Waze                             </a>                             <button                                 onclick='window.parent.postMessage({"tipo":"abrir-detalle-cliente","codigo":"C001673004"}, "*")'                                 style="                                     background:#fff1f2;                                     color:#ee1c25;                                     padding:7px 10px;                                     border-radius:8px;                                     border:none;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                                     cursor:pointer;                                 ">                                 Info                             </button>                         </div>                     </div>                     </div>`)[0];
+                popup_56a136976931f467f0d0adb8528f2fd4.setContent(html_12522c7b4f79a0fede2ce630811f8000);
+            
+        
+
+        marker_8e27e65ff6aab66c42d32185575587ac.bindPopup(popup_56a136976931f467f0d0adb8528f2fd4)
+        ;
+
+        
+    
+    
+                marker_8e27e65ff6aab66c42d32185575587ac.setIcon(icon_bea1ee471e0699c989964d10899faf10);
+            
+    
+            var marker_5e2a009f5d1ed3bd768874d9fe3b12a0 = L.marker(
+                [-11.8931575, -77.0370867],
+                {
+}
+            ).addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+        
+    
+            var icon_715eef10b5ec983194c4d4cf0d36b945 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_fc68e6556b39dfe88db5d4314bd05394 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_f5765262c4cddd21f65a0019147ee585 = $(`<div id="html_f5765262c4cddd21f65a0019147ee585" style="width: 100.0%; height: 100.0%;">                     <div style="font-family:Arial,sans-serif; font-size:13px; line-height:1.45; min-width:240px;">                         <div style="font-weight:bold; font-size:15px; margin-bottom:6px;">                             VALVERDE MACEDO DE LLIUYA JUSTA FELICIAN                         </div>                          <div><b>Código:</b> C004159286</div>                         <div><b>Dirección:</b> JR SALAVERRY N.-340 URB LUCYANA</div>                         <div><b>Tipo documento:</b> DNI</div>                         <div><b>Documento:</b> 10403828</div>                          <div style="display:flex; gap:8px; margin-top:10px;">                             <a href="https://www.google.com/maps/search/?api=1&query=-11.8931575,-77.0370867"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#eef4ff;                                     color:#1d4ed8;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Maps                             </a>                              <a href="https://waze.com/ul?ll=-11.8931575,-77.0370867&navigate=yes"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#ecfeff;                                     color:#0891b2;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Waze                             </a>                             <button                                 onclick='window.parent.postMessage({"tipo":"abrir-detalle-cliente","codigo":"C004159286"}, "*")'                                 style="                                     background:#fff1f2;                                     color:#ee1c25;                                     padding:7px 10px;                                     border-radius:8px;                                     border:none;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                                     cursor:pointer;                                 ">                                 Info                             </button>                         </div>                     </div>                     </div>`)[0];
+                popup_fc68e6556b39dfe88db5d4314bd05394.setContent(html_f5765262c4cddd21f65a0019147ee585);
+            
+        
+
+        marker_5e2a009f5d1ed3bd768874d9fe3b12a0.bindPopup(popup_fc68e6556b39dfe88db5d4314bd05394)
+        ;
+
+        
+    
+    
+                marker_5e2a009f5d1ed3bd768874d9fe3b12a0.setIcon(icon_715eef10b5ec983194c4d4cf0d36b945);
+            
+    
+            var marker_efcc3908571b726ced3e719fcfd0533b = L.marker(
+                [-11.8889682, -77.0373582],
+                {
+}
+            ).addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+        
+    
+            var icon_1dee860eb46a4bd0e570ca3f265e66d9 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_6a41365daa846fcc99eb3006acedd079 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_81e671855e11e6bc2eb1ee61d13629ea = $(`<div id="html_81e671855e11e6bc2eb1ee61d13629ea" style="width: 100.0%; height: 100.0%;">                     <div style="font-family:Arial,sans-serif; font-size:13px; line-height:1.45; min-width:240px;">                         <div style="font-weight:bold; font-size:15px; margin-bottom:6px;">                             VILLAVICENCIO HUAMAN MARIA ROSA                         </div>                          <div><b>Código:</b> C001725842</div>                         <div><b>Dirección:</b> JR. HEROES DE LA PAZ 130CALL MZA. E1 LOTE. 4 URB. ENACE Lima-Lima-Carabayllo</div>                         <div><b>Tipo documento:</b> RUC</div>                         <div><b>Documento:</b> 10099737617</div>                          <div style="display:flex; gap:8px; margin-top:10px;">                             <a href="https://www.google.com/maps/search/?api=1&query=-11.8889682,-77.0373582"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#eef4ff;                                     color:#1d4ed8;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Maps                             </a>                              <a href="https://waze.com/ul?ll=-11.8889682,-77.0373582&navigate=yes"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#ecfeff;                                     color:#0891b2;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Waze                             </a>                             <button                                 onclick='window.parent.postMessage({"tipo":"abrir-detalle-cliente","codigo":"C001725842"}, "*")'                                 style="                                     background:#fff1f2;                                     color:#ee1c25;                                     padding:7px 10px;                                     border-radius:8px;                                     border:none;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                                     cursor:pointer;                                 ">                                 Info                             </button>                         </div>                     </div>                     </div>`)[0];
+                popup_6a41365daa846fcc99eb3006acedd079.setContent(html_81e671855e11e6bc2eb1ee61d13629ea);
+            
+        
+
+        marker_efcc3908571b726ced3e719fcfd0533b.bindPopup(popup_6a41365daa846fcc99eb3006acedd079)
+        ;
+
+        
+    
+    
+                marker_efcc3908571b726ced3e719fcfd0533b.setIcon(icon_1dee860eb46a4bd0e570ca3f265e66d9);
+            
+    
+            var marker_78abc09de454a00dacce483ab083948a = L.marker(
+                [-11.8932385, -77.036453],
+                {
+}
+            ).addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+        
+    
+            var icon_16dd979161ae3362209b89b582d8e0f4 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_06d1c4fdc2aa627a51ce1b23eaccad72 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_53b702c58dfa401e977d9efa6b750086 = $(`<div id="html_53b702c58dfa401e977d9efa6b750086" style="width: 100.0%; height: 100.0%;">                     <div style="font-family:Arial,sans-serif; font-size:13px; line-height:1.45; min-width:240px;">                         <div style="font-weight:bold; font-size:15px; margin-bottom:6px;">                             WALL TOLEDO DE ALFARO ANA MARIA                         </div>                          <div><b>Código:</b> C001756091</div>                         <div><b>Dirección:</b> CALLE COLLASUYO  N.-296</div>                         <div><b>Tipo documento:</b> DNI</div>                         <div><b>Documento:</b> 10693948</div>                          <div style="display:flex; gap:8px; margin-top:10px;">                             <a href="https://www.google.com/maps/search/?api=1&query=-11.8932385,-77.036453"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#eef4ff;                                     color:#1d4ed8;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Maps                             </a>                              <a href="https://waze.com/ul?ll=-11.8932385,-77.036453&navigate=yes"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#ecfeff;                                     color:#0891b2;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Waze                             </a>                             <button                                 onclick='window.parent.postMessage({"tipo":"abrir-detalle-cliente","codigo":"C001756091"}, "*")'                                 style="                                     background:#fff1f2;                                     color:#ee1c25;                                     padding:7px 10px;                                     border-radius:8px;                                     border:none;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                                     cursor:pointer;                                 ">                                 Info                             </button>                         </div>                     </div>                     </div>`)[0];
+                popup_06d1c4fdc2aa627a51ce1b23eaccad72.setContent(html_53b702c58dfa401e977d9efa6b750086);
+            
+        
+
+        marker_78abc09de454a00dacce483ab083948a.bindPopup(popup_06d1c4fdc2aa627a51ce1b23eaccad72)
+        ;
+
+        
+    
+    
+                marker_78abc09de454a00dacce483ab083948a.setIcon(icon_16dd979161ae3362209b89b582d8e0f4);
+            
+    
+            var marker_773751178246c28d0402b8a506428363 = L.marker(
+                [-11.8928399, -77.0363615],
+                {
+}
+            ).addTo(map_779c18570ac06bde3fecbb1c3b1e3f36);
+        
+    
+            var icon_a49ebd7e7f13a73a95b808e90f4da6ef = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_fbb7ffb5d6b7739d3cdcda8bd1c95b5b = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_a180d889dc84e1b12d9b35c49b485ae0 = $(`<div id="html_a180d889dc84e1b12d9b35c49b485ae0" style="width: 100.0%; height: 100.0%;">                     <div style="font-family:Arial,sans-serif; font-size:13px; line-height:1.45; min-width:240px;">                         <div style="font-weight:bold; font-size:15px; margin-bottom:6px;">                             YACTAYO ROMERO WALTER HERBERT                         </div>                          <div><b>Código:</b> C001528236</div>                         <div><b>Dirección:</b> AV. AV COLLASUYO N NRO. 321 URB. ENACE Lima-Lima-Carabayllo</div>                         <div><b>Tipo documento:</b> DNI</div>                         <div><b>Documento:</b> 10028338</div>                          <div style="display:flex; gap:8px; margin-top:10px;">                             <a href="https://www.google.com/maps/search/?api=1&query=-11.8928399,-77.0363615"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#eef4ff;                                     color:#1d4ed8;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Maps                             </a>                              <a href="https://waze.com/ul?ll=-11.8928399,-77.0363615&navigate=yes"                              target="_blank"                              rel="noopener noreferrer"                             style="                                     background:#ecfeff;                                     color:#0891b2;                                     padding:7px 10px;                                     border-radius:8px;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                             ">                             Waze                             </a>                             <button                                 onclick='window.parent.postMessage({"tipo":"abrir-detalle-cliente","codigo":"C001528236"}, "*")'                                 style="                                     background:#fff1f2;                                     color:#ee1c25;                                     padding:7px 10px;                                     border-radius:8px;                                     border:none;                                     text-decoration:none;                                     font-weight:bold;                                     display:inline-block;                                     cursor:pointer;                                 ">                                 Info                             </button>                         </div>                     </div>                     </div>`)[0];
+                popup_fbb7ffb5d6b7739d3cdcda8bd1c95b5b.setContent(html_a180d889dc84e1b12d9b35c49b485ae0);
+            
+        
+
+        marker_773751178246c28d0402b8a506428363.bindPopup(popup_fbb7ffb5d6b7739d3cdcda8bd1c95b5b)
+        ;
+
+        
+    
+    
+                marker_773751178246c28d0402b8a506428363.setIcon(icon_a49ebd7e7f13a73a95b808e90f4da6ef);
+            
+</script>
+</html>
